@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SlotMachine</string>
+    <string name="help_text">Welcome to the slot machine! Press the Start/Stop button to start and stop the slot machine. If you stop the machine when the pictures are the same, you get 100 points!</string>
+</resources>
