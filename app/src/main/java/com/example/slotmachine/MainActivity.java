@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        on = false;
         speedBar = findViewById(R.id.speedBar);
         strawberryImage = getDrawable(R.drawable.strawberry);
         grapeImage = getDrawable(R.drawable.grape);
@@ -52,7 +53,16 @@ public class MainActivity extends AppCompatActivity {
         imageChosen = 1;
         imageChosen2 = 1;
         imageChosen3 = 1;
-        points = 0;
+
+        if (savedInstanceState == null) {
+            points = 0;
+            on = false;
+        } else {
+            points = savedInstanceState.getInt("POINTS");
+            pointDisplay.setText(""+points);
+            on = savedInstanceState.getBoolean("ON");
+        }
+
         speed = 1;
         update = new UpdateGame();
         update2 = new UpdateGame2();
@@ -78,6 +88,30 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    public void onPause () {
+        super.onPause();
+        handler.removeCallbacks(update);
+        handler.removeCallbacks(update2);
+        handler.removeCallbacks(update3);
+    }
+
+    public void onResume() {
+        super.onResume();
+        if (on) {
+            handler.postDelayed(update, 1000);
+            handler.postDelayed(update2, 1000);
+            handler.postDelayed(update3, 1000);
+        }
+    }
+
+
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putInt("POINTS", points);
+        bundle.putBoolean("ON", on);
+    }
+
 
     public void helpPressed(View v) {
         Intent i = new Intent(this, HelpActivity.class);
@@ -131,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
             pointDisplay.setText(points + "");
         }  else {
             on = true;
-            handler.postDelayed(update, 100 * speed);
+            handler.postDelayed(update, 75 * speed);
             handler.postDelayed(update2, 50 * speed);
             handler.postDelayed(update3, 25 * speed);
         }
@@ -146,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             else if (imageChosen == 4) imageView1.setImageDrawable(pearImage);
             imageChosen = imageChosen + 1;
             if (imageChosen == 5) imageChosen = 1;
-            handler.postDelayed(update, 100 * speed);
+            handler.postDelayed(update, 75 * speed);
         }
     }
 
